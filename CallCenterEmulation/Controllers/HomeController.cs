@@ -5,34 +5,63 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CallCenterEmulation.Models;
+using CallCenterEmulation.Hubs;
 
 namespace CallCenterEmulation.Controllers
 {
     public class HomeController : Controller
     {
+        //private readonly UserHub userHub;
+
+        //public HomeController(UserHub userHub)
+        //{
+        //    this.userHub = userHub;
+        //}
+
         public IActionResult Index()
         {
-            return View();
+            List<Operator> operators = new List<Operator> {
+            new Operator{ Id = 1, Name = "John", Type = Constants.EmployeeType.Operator, Status = Constants.EmployeeStatus.Free },
+            new Operator{ Id = 2, Name = "Mark", Type = Constants.EmployeeType.Operator, Status = Constants.EmployeeStatus.Free }};
+
+            return View(operators);
         }
 
-        public IActionResult About()
+        public async Task<ActionResult> StartEmulation()
         {
-            ViewData["Message"] = "Your application description page.";
+            Random r = new Random();
+            UserHub userHub = new UserHub();
 
-            return View();
+            //string message = "new";
+            //string nick = "nick";
+            //await userHub.Send(message, nick);
+
+            var id = (r.Next(1, 100));
+
+            for(int i = 0; i < 5; i++)
+            {
+                var call = new Call() { Id = id, Length = 5 };
+                await userHub.SendCall(call);
+            }
+
+            return null;
         }
 
-        public IActionResult Contact()
+        public ActionResult Operator()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
-        public IActionResult Privacy()
+        public ActionResult Manager()
         {
             return View();
         }
+
+        public ActionResult SeniorManager()
+        {
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
