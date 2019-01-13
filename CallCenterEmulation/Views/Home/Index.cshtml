@@ -10,15 +10,20 @@
 
     <div class="col">
         <div class="row">
-            
-            <button class="btn btn-success" type="submit">@Html.ActionLink("Start emulation", "StartEmulation", "Home", new { @class = "", @id = "" })</button>
-            <button class="btn btn-danger" type="submit">Stop emulation</button>
-            <button class="btn btn-warning" type="submit">Pause emulation</button>
+            <form id="startEmul" action="#">
+                @*<button class="btn btn-success mr-4" type="submit">@Html.ActionLink("Start emulation", "StartEmulation", "Home", new { @class = "", @id = "" })</button>*@
+                <button class="btn btn-success mr-4" type="submit" onclick="startEmulation()">Start emulation</button>
+                <button class="btn btn-danger mr-4" type="submit">Stop emulation</button>
+                <button class="btn btn-warning mr-4" type="submit">Pause emulation</button>
+            </form>
         </div>
     </div>
     <div class="col-sm-12">
         <form>
             <div class="form-group  mx-sm-3 mb-2 col-md-2">
+                <label for="callDuration">Call Id</label>
+                <input type="text" class="form-control" id="callId" placeholder="Call Id">
+
                 <label for="callDuration">Call duration</label>
                 <input type="text" class="form-control" id="callLength" placeholder="Call Length(minutes)">
             </div>
@@ -26,25 +31,135 @@
     </div>
 </div>
 
-    <hr />
+<hr />
 
-    <h4>List of the available operators</h4>
+<h4>List of the available operators</h4>
 
-    <table border="solid 1px black" width="400">
+<table border="solid 1px black" width="400">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Status</th>
+    </tr>
+    @foreach (var row in Model)
+    {
         <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Status</th>
+            <td>@row.Id</td>
+            <td>@row.Name</td>
+            <td>@row.Status</td>
         </tr>
-        @foreach (var row in Model)
-        {
-            <tr>
-                <td>@row.Id</td>
-                <td>@row.Name</td>
-                <td>@row.Status</td>
-            </tr>
-        }
-    </table>
-        
+    }
+</table>
+
+@*<div class="chatTest mt-5">
+        <form id="frm-send-message" action="#">
+            <label for="message">Nick:</label>
+            <input type="text" id="nick" />
+            <label for="message">Message:</label>
+            <input type="text" id="message" />
+            <input type="submit" id="send" value="Send" class="send" />
+        </form>
+
+        <div class="clear">
+        </div>
+        <ul id="messages"></ul>
+
+    </div>*@
 
 
+<div class="clear mt-5">
+</div>
+<ul id="calls"></ul>
+
+<script src="lib/signalr/signalr.min.js"></script>
+
+<script>
+
+    function startEmulation() {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/Home/Index")
+            .build();
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        var call = { id: 1, length: 5, isActive: true };
+
+        connection.on('SendCall', (call) => {
+            appendLine(call);
+        });
+
+        function appendLine(call, color) {
+            let nameElement = document.createElement('strong');
+            nameElement.innerText = `${"Call Id = " + call.id}:`;
+
+            let msgElement = document.createElement('em');
+            msgElement.innerText = ` ${"Call length = " + call.length}`;
+
+            let statusElement = document.createElement('em');
+            statusElement.innerText = ` ${"Call Is Active: " + call.isActive}`;
+
+            let userIdElement = document.createElement('em');
+            userIdElement.innerText = ` ${"Managing by user: " + call.managingByUserId}`;
+
+            let li = document.createElement('li');
+            li.appendChild(nameElement);
+            li.appendChild(msgElement);
+            li.appendChild(statusElement);
+            li.appendChild(userIdElement);
+
+            $('#calls').append(li);
+
+        };
+
+        document.getElementById('startEmul').addEventListener('submit', event => {
+
+            let id = $('#callId').val();
+            let length = $('#callLength').val();
+
+            $('#callLength').val('');
+
+            var call = { id: id, length: length, isActive: true };
+
+            connection.invoke('SendCall', call);
+            event.preventDefault();
+        });
+    };
+</script>
+
+
+
+@*<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/Home/Index")
+        .build();
+
+    connection.start().catch(err => console.error(err.toString()));
+
+    connection.on('Send', (nick, message) => {
+        appendLine(nick, message);
+    });
+
+    document.getElementById('frm-send-message').addEventListener('submit', event => {
+        let message = $('#message').val();
+        let nick = $('#nick').val();
+
+        $('#message').val('');
+
+        connection.invoke('Send', nick, message);
+        event.preventDefault();
+    });
+
+    function appendLine(nick, message, color) {
+        let nameElement = document.createElement('strong');
+        nameElement.innerText = `${nick}:`;
+
+        let msgElement = document.createElement('em');
+        msgElement.innerText = ` ${message}`;
+
+        let li = document.createElement('li');
+        li.appendChild(nameElement);
+        li.appendChild(msgElement);
+
+        $('#messages').append(li);
+
+    };</script>*@

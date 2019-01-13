@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CallCenterEmulation.Models;
 using CallCenterEmulation.Hubs;
+using CallCenterEmulation.Constants;
 
 namespace CallCenterEmulation.Controllers
 {
@@ -20,11 +21,8 @@ namespace CallCenterEmulation.Controllers
 
         public IActionResult Index()
         {
-            List<Operator> operators = new List<Operator> {
-            new Operator{ Id = 1, Name = "John", Type = Constants.EmployeeType.Operator, Status = Constants.EmployeeStatus.Free },
-            new Operator{ Id = 2, Name = "Mark", Type = Constants.EmployeeType.Operator, Status = Constants.EmployeeStatus.Free }};
-
-            return View(operators);
+            OperatorsList list = new OperatorsList();
+            return View(list.operators);
         }
 
         public async Task<ActionResult> StartEmulation()
