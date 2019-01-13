@@ -12,12 +12,11 @@ namespace CallCenterEmulation.Constants
         Free
     }
 
-    public class OperatorsList
-    {
-        public List<Operator> operators = new List<Operator> {
-            new Operator{ Id = 1, Name = "John", Type = Constants.EmployeeType.Operator, Status = Constants.EmployeeStatus.Free },
-            new Operator{ Id = 2, Name = "Mark", Type = Constants.EmployeeType.Operator, Status = Constants.EmployeeStatus.Free }
-    };
+    //public class OperatorsList
+    //{
+    //    public List<Operator> operators = new List<Operator> {
+    //        new Operator{ Id = 1, Name = "John", Type = Constants.EmployeeType.Operator, Status = Constants.EmployeeStatus.Free },
+    //        new Operator{ Id = 2, Name = "Mark", Type = Constants.EmployeeType.Operator, Status = Constants.EmployeeStatus.Free }
+    //};
 
-    }
 }

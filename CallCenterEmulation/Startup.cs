@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CallCenterEmulation.Data;
 using CallCenterEmulation.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using CallCenterEmulation.Models;
 
 namespace CallCenterEmulation
 {
@@ -33,7 +36,16 @@ namespace CallCenterEmulation
             //});
 
             services.AddSignalR();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //var connection = @"Server=DESKTOP-1SDGPUD;Database=callCenter;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //services.AddDbContext<CallCenterContext>
+            //    (options => options.UseSqlite(connection));
+
+            services.AddDbContext<CallCenterContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultContext")));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1); 
+
+            //     services.AddDbContext<CallCenterContext>(options =>
+            //options.UseSqlServer(Configuration.GetConnectionString("CallCenterContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

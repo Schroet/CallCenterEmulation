@@ -10,7 +10,9 @@ namespace CallCenterEmulation.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public EmployeeStatus Status { get; set; }
-        public EmployeeType Type { get; set; }
+        public int StatusId { get; set; }
+        public int TypeId { get; set; }
+        public virtual EmployeeStatus Status { get; set; }
+        public virtual EmployeeType Type { get; set; }
     }
 }

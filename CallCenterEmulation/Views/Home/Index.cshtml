@@ -13,22 +13,32 @@
             <form id="startEmul" action="#">
                 @*<button class="btn btn-success mr-4" type="submit">@Html.ActionLink("Start emulation", "StartEmulation", "Home", new { @class = "", @id = "" })</button>*@
                 <button class="btn btn-success mr-4" type="submit" onclick="startEmulation()">Start emulation</button>
-                <button class="btn btn-danger mr-4" type="submit">Stop emulation</button>
+                @*<button class="btn btn-danger mr-4" type="submit">Stop emulation</button>*@
+                <button class="btn btn-danger mr-4" type="submit">@Html.ActionLink("Stop emulation", "StopEmulation", "Home", new { @class = "", @id = "" })</button>
                 <button class="btn btn-warning mr-4" type="submit">Pause emulation</button>
             </form>
+
+            <div class="col ml-10">
+                <ul>
+                    <li><a href="/home/Operator">Operator Page</a></li>
+                    <li><a href="/home/Manager">Manager Page</a></li>
+                    <li><a href="/home/SeniorManager">Senior Manager Page</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-10 col-lg-12 mr-7 mt-3" style="margin-left:-40px">
         <form>
             <div class="form-group  mx-sm-3 mb-2 col-md-2">
-                <label for="callDuration">Call Id</label>
-                <input type="text" class="form-control" id="callId" placeholder="Call Id">
-
-                <label for="callDuration">Call duration</label>
-                <input type="text" class="form-control" id="callLength" placeholder="Call Length(minutes)">
+                @*<label for="callDuration">Call Id</label>
+                <input type="text" class="form-control" id="callId" placeholder="Call Id">*@
+                <label for="callDuration">Call duration<span class="text-danger">*</span></label>
+                <input type="text" required value="15" class="form-control" id="callLength" placeholder="Call Length(seconds)">
             </div>
         </form>
     </div>
+
+    
 </div>
 
 <hr />
@@ -37,16 +47,18 @@
 
 <table border="solid 1px black" width="400">
     <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Status</th>
+        <th style="padding:10px">Id</th>
+        <th style="padding:10px">Name</th>
+        <th style="padding:10px">Employee Type</th>
+        <th style="padding:10px">Status</th>
     </tr>
     @foreach (var row in Model)
     {
         <tr>
-            <td>@row.Id</td>
-            <td>@row.Name</td>
-            <td>@row.Status</td>
+            <td style="padding:10px">@row.Id</td>
+            <td style="padding:10px">@row.Name</td>
+            <td style="padding:10px">@row.Type.Name</td>
+            <td style="padding:10px">@row.Status.Name</td>
         </tr>
     }
 </table>

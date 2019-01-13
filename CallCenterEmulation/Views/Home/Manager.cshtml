@@ -1,7 +1,11 @@
-﻿
+﻿@model CallCenterEmulation.Models.Operator
+
 @{
     ViewData["Title"] = "Manager";
 }
 
-<h2>Manager</h2>
+<h2>Manager - @Model.Name</h2>
+<h4>Status - @Model.Status.Name</h4>
+
+@Html.ActionLink("Go back", "Index", "Home")
 

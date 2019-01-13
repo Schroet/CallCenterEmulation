@@ -7,57 +7,75 @@ using Microsoft.AspNetCore.Mvc;
 using CallCenterEmulation.Models;
 using CallCenterEmulation.Hubs;
 using CallCenterEmulation.Constants;
+using CallCenterEmulation.Data;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace CallCenterEmulation.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly UserHub userHub;
+        private readonly CallCenterContext _db;
 
-        //public HomeController(UserHub userHub)
-        //{
-        //    this.userHub = userHub;
-        //}
+        public HomeController(CallCenterContext db)
+        {
+            _db = db;
+        }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            OperatorsList list = new OperatorsList();
-            return View(list.operators);
+            var operators = _db.Operators
+                .Include(o =>o.Status)
+                .Include(o => o.Type)
+                .Where(x => x.Id > 0)
+                .ToList();
+
+            return View(operators);
         }
 
         public async Task<ActionResult> StartEmulation()
         {
             Random r = new Random();
-            UserHub userHub = new UserHub();
-
-            //string message = "new";
-            //string nick = "nick";
-            //await userHub.Send(message, nick);
-
+            var operators = _db.Operators.Where(x => x.Id > 0);
             var id = (r.Next(1, 100));
 
             for(int i = 0; i < 5; i++)
             {
                 var call = new Call() { Id = id, Length = 5 };
-                await userHub.SendCall(call);
             }
 
             return null;
         }
 
+        public ActionResult StopEmulation()
+        {
+            var ops = _db.Operators;
+            foreach(var o in ops)
+            {
+                o.StatusId = 2;
+            }
+            _db.SaveChanges();
+
+           return RedirectToAction("Index");
+        }
+
         public ActionResult Operator()
         {
-            return View();
+            var operatorModel = _db.Operators.Where(x=>x.Id == 1).Include(o=>o.Status).FirstOrDefault();
+            return View(operatorModel);
         }
 
         public ActionResult Manager()
         {
-            return View();
+            var managerModel = _db.Operators.Where(x => x.Id == 2).Include(o => o.Status).FirstOrDefault();
+            return View(managerModel);
         }
 
         public ActionResult SeniorManager()
         {
-            return View();
+            var seniorModel = _db.Operators.Where(x => x.Id == 3).Include(o => o.Status).FirstOrDefault();
+            return View(seniorModel);
         }
 
 
