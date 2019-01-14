@@ -11,6 +11,7 @@ using CallCenterEmulation.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace CallCenterEmulation.Controllers
 {
     public class HomeController : Controller
